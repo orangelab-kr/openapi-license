@@ -1,4 +1,4 @@
-service: 'hikick-license'
+service: 'openapi-license'
 
 provider:
   name: aws
