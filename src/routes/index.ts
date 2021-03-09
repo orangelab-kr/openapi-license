@@ -4,6 +4,7 @@ import InternalError from '../tools/error';
 import Joi from '../tools/joi';
 import License from '../controllers/license';
 import OPCODE from '../tools/opcode';
+import { PlatformMiddleware } from '../middlewares';
 import Wrapper from '../tools/wrapper';
 import logger from '../tools/logger';
 import morgan from 'morgan';
@@ -19,7 +20,7 @@ export default function getRouter(): Application {
   router.use(logging);
   router.use(express.json());
   router.use(express.urlencoded({ extended: true }));
-
+  router.use(PlatformMiddleware());
   router.get(
     '/',
     Wrapper(async (_req, res) => {
