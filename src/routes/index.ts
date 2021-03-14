@@ -1,14 +1,13 @@
 import express, { Application } from 'express';
-
-import InternalError from '../tools/error';
-import Joi from '../tools/joi';
-import License from '../controllers/license';
-import OPCODE from '../tools/opcode';
-import { PlatformMiddleware } from '../middlewares';
-import Wrapper from '../tools/wrapper';
-import logger from '../tools/logger';
 import morgan from 'morgan';
 import os from 'os';
+import License from '../controllers/license';
+import { PlatformMiddleware } from '../middlewares';
+import InternalError from '../tools/error';
+import Joi from '../tools/joi';
+import logger from '../tools/logger';
+import OPCODE from '../tools/opcode';
+import Wrapper from '../tools/wrapper';
 
 export default function getRouter(): Application {
   const router = express();
@@ -20,7 +19,6 @@ export default function getRouter(): Application {
   router.use(logging);
   router.use(express.json());
   router.use(express.urlencoded({ extended: true }));
-  router.use(PlatformMiddleware());
   router.get(
     '/',
     Wrapper(async (_req, res) => {
@@ -34,6 +32,7 @@ export default function getRouter(): Application {
 
   router.post(
     '/',
+    PlatformMiddleware(),
     Wrapper(async (req, res) => {
       const schema = Joi.object({
         realname: Joi.string().min(2).max(10).required(),

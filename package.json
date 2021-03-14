@@ -1,6 +1,6 @@
 {
   "name": "openapi-license",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "dist/index.js",
   "repository": "https://github.com/hikick/license.git",
   "author": "danieluhm2004 <daniel@hikick.kr>",
