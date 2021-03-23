@@ -1,16 +1,19 @@
 import express, { Application } from 'express';
-import morgan from 'morgan';
-import os from 'os';
-import License from '../controllers/license';
-import { PlatformMiddleware } from '../middlewares';
+
 import InternalError from '../tools/error';
 import Joi from '../tools/joi';
-import logger from '../tools/logger';
+import License from '../controllers/license';
 import OPCODE from '../tools/opcode';
+import { PlatformMiddleware } from '../middlewares';
 import Wrapper from '../tools/wrapper';
+import logger from '../tools/logger';
+import morgan from 'morgan';
+import os from 'os';
 
 export default function getRouter(): Application {
   const router = express();
+  InternalError.registerSentry(router);
+
   const hostname = os.hostname();
   const logging = morgan('common', {
     stream: { write: (str: string) => logger.info(`${str.trim()}`) },

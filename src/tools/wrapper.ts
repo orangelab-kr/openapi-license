@@ -2,7 +2,6 @@ import * as Sentry from '@sentry/node';
 
 import { NextFunction, Request, Response } from 'express';
 
-import { InternalError } from '.';
 import OPCODE from './opcode';
 import { ValidationError } from 'joi';
 import logger from './logger';
@@ -29,7 +28,7 @@ export default function Wrapper(cb: Callback): Callback {
       const eventId = Sentry.captureException(err);
       let details;
 
-      if (err instanceof InternalError) {
+      if (err.name === 'InternalError') {
         opcode = err.opcode;
         message = err.message;
         details = err.details;
