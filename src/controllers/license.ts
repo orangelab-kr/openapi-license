@@ -31,7 +31,9 @@ export default class License {
 
     const $ = cheerio.load(res);
     const result = $('#licen-truth > tbody > tr:nth-child(1) > td').text();
-    const message = '전산 자료와 일치 합니다.식별번호가 일치합니다.';
-    return result.trim().replace(/\s{2}/g, '') === message;
+    return result
+      .trim()
+      .replace(/\s{2}/g, '')
+      .startsWith('전산 자료와 일치 합니다.');
   }
 }

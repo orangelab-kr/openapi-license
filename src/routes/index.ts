@@ -40,7 +40,7 @@ export default function getRouter(): Application {
       const schema = Joi.object({
         realname: Joi.string().min(2).max(10).required(),
         birthday: Joi.date().required(),
-        identity: Joi.string().length(6).required(),
+        identity: Joi.string().length(6).optional(),
         license: Joi.array()
           .required()
           .items(
