@@ -1,37 +1,45 @@
-import { Callback, Wrapper, logger } from '../tools';
 import {
+  Callback,
+  InternalClient,
   InternalError,
-  InternalPlatformClient,
   OPCODE,
-  PlatformPermission,
-} from 'openapi-internal-sdk';
+  Wrapper,
+  logger,
+} from '../tools';
 
-import os from 'os';
+import { PlatformPermission } from 'openapi-internal-sdk';
 
-export default function PlatformMiddleware(
-  permissionIds: string[] = []
-): Callback {
-  const hostname = os.hostname();
-  const platformClient = new InternalPlatformClient({
-    issuer: 'openapi.hikick.kr',
-    secretKey: process.env.HIKICK_OPENAPI_PLATFORM_KEY || '',
-    email: `${hostname}-${process.env.NODE_ENV}@${process.env.AWS_LAMBDA_FUNCTION_NAME}.openapi.hikick.kr`,
-    permissions: [PlatformPermission.ACCESS_KEYS_AUTHORIZE],
-  });
+export function PlatformMiddleware(permissionIds: string[] = []): Callback {
+  const platformClient = InternalClient.getPlatform([
+    PlatformPermission.AUTHORIZE_USER,
+    PlatformPermission.AUTHORIZE_ACCESS_KEY,
+  ]);
 
-  platformClient.baseURL = process.env.HIKICK_OPENAPI_PLATFORM_URL || '';
   return Wrapper(async (req, res, next) => {
     try {
       const { headers } = req;
       const platformAccessKeyId = `${headers['x-hikick-platform-access-key-id']}`;
       const platformSecretAccessKey = `${headers['x-hikick-platform-secret-access-key']}`;
-      const accessKey = await platformClient.getPlatformFromAccessKey({
-        platformAccessKeyId,
-        platformSecretAccessKey,
-        permissionIds,
-      });
+      const sessionId = `${headers['authorization']}`.substr(7);
+      if (platformAccessKeyId && platformSecretAccessKey) {
+        const accessKey = await platformClient.getAccessKeyWithPermissions({
+          platformAccessKeyId,
+          platformSecretAccessKey,
+          permissionIds,
+        });
 
-      req.accessKey = accessKey;
+        const { platform } = accessKey;
+        req.loggined = { platform, accessKey };
+      } else {
+        const user = await platformClient.getUserWithPermissions({
+          sessionId,
+          permissionIds,
+        });
+
+        const { platform } = user;
+        req.loggined = { platform, user };
+      }
+
       next();
     } catch (err) {
       if (process.env.NODE_ENV === 'dev') {

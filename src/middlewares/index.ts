@@ -1,1 +1,1 @@
-export { default as PlatformMiddleware } from './platform';
+export * from './platform';

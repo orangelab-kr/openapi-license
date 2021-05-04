@@ -1,10 +1,18 @@
 import 'express';
-import { InternalPlatformAccessKey } from 'openapi-internal-sdk';
+import {
+  InternalPlatform,
+  InternalPlatformAccessKey,
+  InternalPlatformUser,
+} from 'openapi-internal-sdk';
 
 declare global {
   namespace Express {
     interface Request {
-      accessKey: InternalPlatformAccessKey;
+      loggined: {
+        platform: InternalPlatform;
+        accessKey?: InternalPlatformAccessKey;
+        user?: InternalPlatformUser;
+      };
     }
   }
 }

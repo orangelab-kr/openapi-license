@@ -4,3 +4,4 @@ export { default as logger } from './logger';
 export { default as OPCODE } from './opcode';
 export * from './wrapper';
 export { default as Wrapper } from './wrapper';
+export * from './internalClient';
