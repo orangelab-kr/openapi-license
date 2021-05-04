@@ -6,6 +6,7 @@ import License from '../controllers/license';
 import OPCODE from '../tools/opcode';
 import { PlatformMiddleware } from '../middlewares';
 import Wrapper from '../tools/wrapper';
+import cors from 'cors';
 import logger from '../tools/logger';
 import morgan from 'morgan';
 import os from 'os';
@@ -19,6 +20,7 @@ export default function getRouter(): Application {
     stream: { write: (str: string) => logger.info(`${str.trim()}`) },
   });
 
+  router.use(cors());
   router.use(logging);
   router.use(express.json());
   router.use(express.urlencoded({ extended: true }));
