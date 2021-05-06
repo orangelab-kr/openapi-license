@@ -1,15 +1,15 @@
 import cheerio from 'cheerio';
-import got from 'got/dist/source';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import got from 'got';
 
-export default class License {
+export class License {
   public static async isValidLicense(props: {
     realname: string;
     birthday: Date;
     license: [string, string, string, string];
     identity: string;
   }): Promise<boolean> {
-    const birthday = moment(props.birthday);
+    const birthday = dayjs(props.birthday);
     const res = await got({
       method: 'POST',
       url: 'https://www.efine.go.kr/licen/truth/licenTruth.do',

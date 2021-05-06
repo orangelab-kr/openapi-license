@@ -1,17 +1,19 @@
+import {
+  InternalError,
+  Joi,
+  License,
+  OPCODE,
+  PlatformMiddleware,
+  Wrapper,
+  logger,
+} from '..';
 import express, { Application } from 'express';
 
-import InternalError from '../tools/error';
-import Joi from '../tools/joi';
-import License from '../controllers/license';
-import OPCODE from '../tools/opcode';
-import { PlatformMiddleware } from '../middlewares';
-import Wrapper from '../tools/wrapper';
 import cors from 'cors';
-import logger from '../tools/logger';
 import morgan from 'morgan';
 import os from 'os';
 
-export default function getRouter(): Application {
+export function getRouter(): Application {
   const router = express();
   InternalError.registerSentry(router);
 
