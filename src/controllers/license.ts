@@ -1,6 +1,7 @@
 import cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import got from 'got';
+import { logger } from '../tools';
 
 export class License {
   public static async isValidLicense(props: {
@@ -9,6 +10,7 @@ export class License {
     license: [string, string, string, string];
     identity: string;
   }): Promise<boolean> {
+    if (this.isBypassLicense(props.license)) return true;
     const birthday = dayjs(props.birthday);
     const res = await got({
       method: 'POST',
@@ -35,5 +37,20 @@ export class License {
       .trim()
       .replace(/\s{2}/g, '')
       .startsWith('전산 자료와 일치 합니다.');
+  }
+
+  public static isBypassLicense(
+    license: [string, string, string, string]
+  ): boolean {
+    const licenseStr = license.join('-');
+    const bypassStr = String(process.env.LICENSE_BYPASS || '');
+    const bypassLicenses = bypassStr.split(',');
+    for (const bypassLicense of bypassLicenses) {
+      if (licenseStr === bypassLicense) continue;
+      logger.warn(`바이패스용 라이선스가 사용되었습니다. (${bypassLicense})`);
+      return true;
+    }
+
+    return false;
   }
 }
