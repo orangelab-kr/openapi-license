@@ -58,7 +58,8 @@ export function getRouter(): Application {
       const options = { abortEarly: false };
       const data = await schema.validateAsync(req.body, options);
       const isValid = await License.isValidLicense(data);
-      res.json({ opcode: OPCODE.SUCCESS, isValid });
+      const statusCode = isValid ? 200 : 400;
+      res.status(statusCode).json({ opcode: OPCODE.SUCCESS, isValid });
     })
   );
 
