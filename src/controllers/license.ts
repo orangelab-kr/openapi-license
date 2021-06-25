@@ -8,9 +8,9 @@ export class License {
     realname: string;
     birthday: Date;
     license: [string, string, string, string];
-    identity: string;
+    identity?: string;
   }): Promise<boolean> {
-    if (this.isBypassLicense(props.license)) return true;
+    if (this.isBypassLicense(props)) return true;
     const birthday = dayjs(props.birthday);
     const res = await got({
       method: 'POST',
@@ -39,15 +39,22 @@ export class License {
       .startsWith('전산 자료와 일치 합니다.');
   }
 
-  public static isBypassLicense(
-    license: [string, string, string, string]
-  ): boolean {
+  public static isBypassLicense(props: {
+    realname: string;
+    birthday: Date;
+    license: [string, string, string, string];
+  }): boolean {
+    const { realname, license } = props;
     const licenseStr = license.join('-');
     const bypassStr = String(process.env.LICENSE_BYPASS || '');
     const bypassLicenses = bypassStr.split(',');
     for (const bypassLicense of bypassLicenses) {
-      if (licenseStr === bypassLicense) continue;
-      logger.warn(`바이패스용 라이선스가 사용되었습니다. (${bypassLicense})`);
+      if (licenseStr !== bypassLicense) continue;
+      const birthday = dayjs(props.birthday).format('YYYY-MM-DD');
+      logger.warn(
+        `${realname}님께서 바이패스용 라이선스를 사용하였습니다. (${bypassLicense}, ${birthday})`
+      );
+
       return true;
     }
 
