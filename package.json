@@ -1,6 +1,6 @@
 {
   "name": "openapi-license",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "main": "dist/index.js",
   "repository": "https://github.com/hikick/openapi-license.git",
   "author": "danieluhm2004 <daniel@hikick.kr>",
@@ -20,6 +20,7 @@
   "dependencies": {
     "@sentry/node": "^6.7.2",
     "@sentry/tracing": "^6.7.2",
+    "@slack/webhook": "^6.0.0",
     "cheerio": "^1.0.0-rc.10",
     "cors": "^2.8.5",
     "cross-env": "^7.0.2",

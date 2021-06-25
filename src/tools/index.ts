@@ -5,3 +5,4 @@ export * from './opcode';
 export * from './wrapper';
 export * from './wrapper';
 export * from './internalClient';
+export * from './webhook';

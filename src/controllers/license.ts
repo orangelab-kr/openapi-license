@@ -1,7 +1,7 @@
 import cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import got from 'got';
-import { logger } from '../tools';
+import { logger, Webhook } from '..';
 
 export class License {
   public static async isValidLicense(props: {
@@ -33,10 +33,23 @@ export class License {
 
     const $ = cheerio.load(res);
     const result = $('#licen-truth > tbody > tr:nth-child(1) > td').text();
-    return result
+    const isSuccess = result
       .trim()
       .replace(/\s{2}/g, '')
       .startsWith('전산 자료와 일치 합니다.');
+    const message = isSuccess
+      ? '✔️ 라이선스가 인증되었습니다.'
+      : '❌ 라이선스 인증이 시도되었습니다.';
+
+    await Webhook.send(
+      `${message}
+        
+· 성명: ${props.realname}
+· 라이선스: ${props.license.join('-')}
+· 생년월일: ${birthday.format('YYYY-MM-DD')}`
+    );
+
+    return isSuccess;
   }
 
   public static isBypassLicense(props: {
@@ -53,6 +66,14 @@ export class License {
       const birthday = dayjs(props.birthday).format('YYYY-MM-DD');
       logger.warn(
         `${realname}님께서 바이패스용 라이선스를 사용하였습니다. (${bypassLicense}, ${birthday})`
+      );
+
+      Webhook.send(
+        `😎 바이패스용 라이선스가 사용되었습니다.
+        
+· 성명: ${realname}
+· 라이선스: ${bypassLicense}
+· 생년월일: ${birthday}`
       );
 
       return true;
