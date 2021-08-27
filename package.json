@@ -8,15 +8,17 @@
   "license": "MIT",
   "scripts": {
     "serve": "yarn serve:dev",
-    "serve:dev": "cross-env NODE_ENV=dev npx serverless offline --stage dev",
-    "serve:stage": "cross-env NODE_ENV=stage npx serverless offline --stage stage",
-    "serve:prod": "cross-env NODE_ENV=prod npx serverless offline --stage prod",
+    "serve:dev": "sls offline --stage dev",
+    "serve:prod": "sls offline --stage prod",
+    "serve:stage": "sls offline --stage stage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "deploy": "yarn deploy:prod",
-    "deploy:prod": "serverless deploy --stage prod",
-    "deploy:stage": "serverless deploy --stage stage",
-    "deploy:dev": "serverless deploy --stage dev"
+    "deploy": "yarn deploy:stage",
+    "deploy:prod": "sls deploy --stage prod",
+    "deploy:stage": "sls deploy --stage stage",
+    "purge": "yarn purge:stage",
+    "purge:prod": "sls remove --stage prod",
+    "purge:stage": "sls remove --stage stage"
   },
   "dependencies": {
     "@sentry/node": "^6.11.0",
