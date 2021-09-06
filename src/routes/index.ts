@@ -25,7 +25,7 @@ export function getRouter(): Application {
 
   router.post(
     '/',
-    PlatformMiddleware(),
+    PlatformMiddleware({ permissionIds: ['license.validate'], final: true }),
     Wrapper(async (req, res) => {
       const schema = Joi.object({
         realname: Joi.string().min(2).max(10).required(),
