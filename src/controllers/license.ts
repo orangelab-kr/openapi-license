@@ -2,6 +2,7 @@ import cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import got from 'got';
 import { logger, Webhook } from '..';
+import { randomBytes } from 'crypto';
 
 export class License {
   public static async isValidLicense(props: {
@@ -12,6 +13,7 @@ export class License {
   }): Promise<boolean> {
     if (this.isBypassLicense(props)) return true;
     const birthday = dayjs(props.birthday);
+    const randomKey = randomBytes(3).toString('hex').toUpperCase();
     const res = await got({
       method: 'POST',
       url: 'https://www.efine.go.kr/licen/truth/licenTruth.do',
@@ -23,6 +25,8 @@ export class License {
         regMonth: birthday.month() + 1,
         regDate: birthday.date(),
         name: props.realname,
+        btnSearch_msg0_new: randomKey,
+        Security_Mag: randomKey,
         licenNo0: props.license[0],
         licenNo1: props.license[1],
         licenNo2: props.license[2],
