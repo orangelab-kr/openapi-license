@@ -1,9 +1,9 @@
-import { PlatformPermission } from 'openapi-internal-sdk';
+import { PlatformPermission } from '@hikick/openapi-internal-sdk';
 import { Callback, InternalClient, Wrapper } from '../tools';
 
 const platformClient = InternalClient.getPlatform([
-  PlatformPermission.AUTHORIZE_USER,
-  PlatformPermission.AUTHORIZE_ACCESS_KEY,
+  PlatformPermission.PLATFORM_USER_AUTHORIZE,
+  PlatformPermission.PLATFORM_ACCESS_KEY_AUTHORIZE,
 ]);
 
 export function PlatformMiddleware(
