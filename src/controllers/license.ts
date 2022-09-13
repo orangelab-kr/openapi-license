@@ -1,8 +1,8 @@
 import cheerio from 'cheerio';
+import { randomBytes } from 'crypto';
 import dayjs from 'dayjs';
 import got from 'got';
 import { logger, Webhook } from '..';
-import { randomBytes } from 'crypto';
 
 export class License {
   public static async isValidLicense(props: {
@@ -22,8 +22,8 @@ export class License {
         checkPage: 2,
         flag: 'searchPage',
         regYear: birthday.year(),
-        regMonth: birthday.month() + 1,
-        regDate: birthday.date(),
+        regMonth: License.withPadding(birthday.month() + 1),
+        regDate: License.withPadding(birthday.date()),
         name: props.realname,
         btnSearch_msg0_new: randomKey,
         Security_Mag: randomKey,
@@ -54,6 +54,10 @@ export class License {
     );
 
     return isSuccess;
+  }
+
+  public static withPadding(n: number, pad = 2): string {
+    return n.toString().padStart(pad, '0');
   }
 
   public static isBypassLicense(props: {
